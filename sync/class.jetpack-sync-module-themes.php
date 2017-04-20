@@ -235,7 +235,7 @@ class Jetpack_Sync_Module_Themes extends Jetpack_Sync_Module {
 	}
 
 	public function update_nav_menu_add_item( $menu_id, $nav_item_id, $nav_item_args ) {
-		$menu_data = wp_get_nav_menu_object( $menu_id ); //
+		$menu_data = wp_get_nav_menu_object( $menu_id );
 		$this->nav_items_just_added[] = $nav_item_id;
 		/**
 		 * Helps sync log that a new menu item was added.
