@@ -2014,14 +2014,6 @@ class Grunion_Contact_Form extends Crunion_Contact_Form_Shortcode {
 			$reply_to_addr = $comment_author_email;
 		}
 
-		/*
-		 * Build the message headers
-		 *
-		 * We don't need to specify a Content-Type header, because PHPMailer will automatically generate the
-		 * proper content-type for each part of the message once it detects that an AltBody is added.
-		 *
-		 * wp_mail() automatically sets the Charset to the site's charset, so we don't need to do that either.
-		 */
 		$headers = 'From: "' . $comment_author . '" <' . $from_email_addr . ">\r\n" .
 					'Reply-To: "' . $comment_author . '" <' . $reply_to_addr . ">\r\n";
 
@@ -2156,6 +2148,7 @@ class Grunion_Contact_Form extends Crunion_Contact_Form_Shortcode {
 			wp_schedule_event( time() + 250, 'daily', 'grunion_scheduled_delete' );
 		}
 
+		add_filter( 'wp_mail_content_type', __CLASS__ . '::get_mail_content_type' );
 		add_action( 'phpmailer_init', __CLASS__ . '::add_plain_text_alternative' );
 		if (
 			$is_spam !== true &&
@@ -2187,6 +2180,7 @@ class Grunion_Contact_Form extends Crunion_Contact_Form_Shortcode {
 		) { // don't send spam by default.  Filterable.
 			wp_mail( $to, "{$spam}{$subject}", $message, $headers );
 		}
+		remove_filter( 'wp_mail_content_type', __CLASS__ . '::get_mail_content_type' );
 		remove_action( 'phpmailer_init', __CLASS__ . '::add_plain_text_alternative' );
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -2219,6 +2213,15 @@ class Grunion_Contact_Form extends Crunion_Contact_Form_Shortcode {
 
 		wp_safe_redirect( $redirect );
 		exit;
+	}
+
+	/**
+	 * Get the content type that should be assigned to outbound emails
+	 *
+	 * @return string
+	 */
+	static function get_mail_content_type() {
+		return 'text/html';
 	}
 
 	/**
