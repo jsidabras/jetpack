@@ -224,13 +224,29 @@ class Jetpack_Sync_Module_Themes extends Jetpack_Sync_Module {
 		if ( empty( $menu_data ) ) {
 			return;
 		}
-
+		/**
+		 * Helps Sync log that a got cleared from inactive.
+		 *
+		 * @param int $menu_id, the id of the menu
+		 * @param object $menu_data
+		 * @since 4.9.0
+		 */
 		do_action( 'jetpack_sync_updated_nav_menu', $menu_id, $menu_data );
 	}
 
 	public function update_nav_menu_add_item( $menu_id, $nav_item_id, $nav_item_args ) {
 		$menu_data = wp_get_nav_menu_object( $menu_id ); //
 		$this->nav_items_just_added[] = $nav_item_id;
+		/**
+		 * Helps sync log that a new menu item was added.
+		 *
+		 * @since 4.9.0
+		 *
+		 * @param int $menu_id, the id of the menu
+		 * @param object $menu_data
+		 * @param int $nav_item_id
+		 * @param int $nav_item_args
+		 */
 		do_action( 'jetpack_sync_updated_nav_menu_add_item', $menu_id, $menu_data, $nav_item_id, $nav_item_args );
 	}
 
@@ -239,6 +255,17 @@ class Jetpack_Sync_Module_Themes extends Jetpack_Sync_Module {
 			return;
 		}
 		$menu_data = wp_get_nav_menu_object( $menu_id );
+
+		/**
+		 * Helps sync log that an update to the menu item happened.
+		 *
+		 * @since 4.9.0
+		 *
+		 * @param int $menu_id, the id of the menu
+		 * @param object $menu_data
+		 * @param int $nav_item_id
+		 * @param int $nav_item_args
+		 */
 		do_action( 'jetpack_sync_updated_nav_menu_update_item', $menu_id, $menu_data, $nav_item_id, $nav_item_args );
 	}
 
